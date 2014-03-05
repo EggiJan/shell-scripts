@@ -1,0 +1,90 @@
+#!/bin/bash
+# My first shell-script
+file="./tempfile"
+##################################################################
+# FUNCTIONS
+##################################################################
+function usage() {
+	echo -e "\033[33mUSAGE: $0 <size of write-file in MB> <destination>\033[0m"
+	echo -e "\033[33mEXAMPLE: hdtest 1024 /media/HDD\033[0m"
+	exit 1
+}
+
+function check1024() {
+	local input=$1
+	# calc modulo
+	local r=$(($input%1024))
+
+	if [ $r -ne 0 ]
+		then
+			echo -e "\033[31mERROR: Incorrect filesize -> Size has to be devisable by 1024\033[0m"
+
+			# print usage info
+			usage			
+	fi
+}
+
+function runTest() {
+	echo -e "..writing file"
+	dd if=/dev/zero of=tempfile bs=1M count=$1 conv=fdatasync,notrunc
+
+	echo -e "\033[0m\033[33mCleared HDD Cache.\033[0m"
+	# >/dev/null 2>&1 mute output
+	echo -e 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null 2>&1
+
+	echo -e "..Detecting read speed"
+	dd if=tempfile of=/dev/null bs=1M count=$1 
+	
+	echo -e "\033[0m\033[33m..Detecting buffer read-speed.. (5 iterations)"
+	i=1
+	while [ $i -le 4 ]
+	do
+		echo -e "$i. done."
+		dd if=tempfile of=/dev/null bs=1M count=$1 >/dev/null 2>&1
+		i=`expr $i + 1`
+	done
+	if [ $i -eq 5 ]
+		then
+			echo -e "$i. ...\033[0m"
+			dd if=tempfile of=/dev/null bs=1M count=$1
+	fi
+}
+
+############################################################################
+
+# call usage function if there are less than two parameters
+[[ $# -lt 2 ]] && usage
+
+# check size value
+check1024 $1
+
+
+ # cd in device
+ if [ -e $2 ]
+ 	then
+ 		cd $2
+ 		echo -e "Switched to $2"
+ 	else
+ 		echo -e "\033[31mERROR: Directory $2 does not exist\033[0m"
+ 		usage
+ fi
+ 		
+# check if tempfile already exists
+if [ -f "$file" ]
+then
+	echo -e "$file already exist."
+	echo -e "removing old $file..."
+	rm $file
+	echo "done"
+else
+	echo -e "\033[33mStarting test...\033[0m"
+fi
+
+# run the tests
+runTest $1
+echo "Test finished."
+
+# remove the tempfile
+echo -e "\033[0m\033[33mCleaning up..."
+rm $file
+echo -e "Done.\033[0m"
