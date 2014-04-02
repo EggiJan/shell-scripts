@@ -3,7 +3,7 @@ shell-scripts
 
 my Shell-Scripts
 
-### hdtest
+## hdtest
 * writes a tempfile using dd
 * measures the consumed time
 * prompts write and read speed in MB/s
@@ -14,11 +14,16 @@ example:
 `hdtest 1024 /mnt/HDD1`
 
 
-### extjsMvcFolders
+## extjsMvcFolders
 * creates the folder structure for a ExtJS 4 MVC Application
-usage:
+
+####usage:
+
 `extjsMvcFolders.sh <destination> <ProjectName> [options]`
 
-options:
-	`--create-ext /path/to/your/copyOfExtJs`
-	creates a copy of the extJS folder in your application folder
+####Options:
+
+Create a copy of an extJS folder in your application folder
+
+`--create-ext /path/to/your/ExtJsSource`
+
