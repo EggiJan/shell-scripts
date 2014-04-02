@@ -28,27 +28,27 @@ function check1024() {
 
 function runTest() {
 	echo -e "..writing file"
-	dd if=/dev/zero of=tempfile bs=1M count=$1 conv=fdatasync,notrunc
+	dd if=/dev/zero of=tempfile bs=1m count=$1 conv=fdatasync,notrunc
 
 	echo -e "\033[0m\033[33mCleared HDD Cache.\033[0m"
 	# >/dev/null 2>&1 mute output
 	echo -e 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null 2>&1
 
 	echo -e "..Detecting read speed"
-	dd if=tempfile of=/dev/null bs=1M count=$1 
+	dd if=tempfile of=/dev/null bs=1m count=$1 
 	
 	echo -e "\033[0m\033[33m..Detecting buffer read-speed.. (5 iterations)"
 	i=1
 	while [ $i -le 4 ]
 	do
 		echo -e "$i. done."
-		dd if=tempfile of=/dev/null bs=1M count=$1 >/dev/null 2>&1
+		dd if=tempfile of=/dev/null bs=1m count=$1 >/dev/null 2>&1
 		i=`expr $i + 1`
 	done
 	if [ $i -eq 5 ]
 		then
 			echo -e "$i. ...\033[0m"
-			dd if=tempfile of=/dev/null bs=1M count=$1
+			dd if=tempfile of=/dev/null bs=1m count=$1
 	fi
 }
 
