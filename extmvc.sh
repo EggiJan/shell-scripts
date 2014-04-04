@@ -37,8 +37,8 @@ function create(){
 	mkdir data
 
 	echo "creating files"
-	echo "<!--index.html -->" >> app/index.html
-	echo "//app.js" >> app/app.js
+	echo "<!--index.html -->" >> index.html
+	echo "//app.js" >> app.js
 }
 
 function copyExt() {
