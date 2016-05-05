@@ -1,7 +1,12 @@
-shell-scripts
+Helper scripts
 =============
 
-my Shell-Scripts
+A collection of small helper scripts
+
+## wolmount
+* Checks if you are in the correct IP range
+* Pings your NAS and wakes it up via wake-on lan if it's not running
+* Mounts given SMB shares
 
 ## hdtest
 * writes a tempfile using dd
